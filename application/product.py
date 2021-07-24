@@ -23,33 +23,38 @@ class ProductInterface(metaclass=abc.ABCMeta):
         )
 
 
+DISABLED = "disabled"
+ENABLE = "enable"
+
+
 @ProductInterface.register
 class Product:
+    def __init__(self):
+        pass
+
     def __str__(self) -> str:
         return f'Product'
     
-    def is_valid() -> bool:
+    def is_valid(self) -> bool:
         pass
 
-    def enable() -> bool:
+    def enable(self) -> bool:
         pass
 
-    def disable() -> bool:
+    def disable(self) -> bool:
         pass
 
-    def get_id() -> str:
+    def get_id(self) -> str:
         pass
 
-    def get_name() -> str:
+    def get_name(self) -> str:
         pass
 
-    def get_status() -> str:
+    def get_status(self) -> str:
         pass
 
-    def get_price() -> str:
+    def get_price(self) -> str:
         pass
-
-
 
 
 print(issubclass(Product, ProductInterface))
