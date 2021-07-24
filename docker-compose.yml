@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+    web:
+        build: .
+        container_name: product_app
+        volumes:
+            - .:/home/product/app/
+        ports:
+            - 5000:5000
+        env_file:
+            - ./.env
+        restart: unless-stopped
+        extra_hosts:
+            - "host.docker.internal:172.17.0.1"
+    
