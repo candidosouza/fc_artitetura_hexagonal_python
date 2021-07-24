@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cp .env.example .env
-python app.py
+python manager.py runserver 0.0.0.0:8000

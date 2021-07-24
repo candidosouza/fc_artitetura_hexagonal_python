@@ -1,1 +1,1 @@
-Flask==2.0
+Django==3.2
