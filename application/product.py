@@ -1,59 +1,84 @@
-import abc
 
-class ProductInterface(metaclass=abc.ABCMeta):
+class ProductMeta(type):
+    def __instancecheck__(cls, instance):
+        return cls.__subclasscheck__(type(instance))
 
-    @classmethod
-    def __subclasshook__(cls, subclass):
+    def __subclasscheck__(cls, subclass):
         return (
-                hasattr(subclass, 'is_valid') and
-                callable(subclass.is_valid) and
-                hasattr(subclass, 'enable') and
-                callable(subclass.enable) and
-                hasattr(subclass, 'disable') and
-                callable(subclass.disable) and
-                hasattr(subclass, 'get_id') and
-                callable(subclass.get_id) and
-                hasattr(subclass, 'get_name') and
-                callable(subclass.get_name) and
-                hasattr(subclass, 'get_status') and
-                callable(subclass.get_status) and
-                hasattr(subclass, 'get_price') and
-                callable(subclass.get_price) or 
-                NotImplemented
+            hasattr(subclass, 'id') and callable(subclass.id) and
+            hasattr(subclass, 'name') and callable(subclass.name) and
+            hasattr(subclass, 'status') and callable(subclass.status) and
+            hasattr(subclass, 'price') and callable(subclass.price)and
+            hasattr(subclass, 'is_valid') and callable(subclass.is_valid) and
+            hasattr(subclass, 'enabled') and callable(subclass.enabled) and
+            hasattr(subclass, 'disabled') and callable(subclass.disabled) or
+            NotImplemented
         )
 
-
-DISABLED = "disabled"
-ENABLE = "enable"
-
-
-@ProductInterface.register
-class Product:
-    def __init__(self):
-        pass
+class ProductInterface(metaclass=ProductMeta):
 
     def __str__(self) -> str:
-        return f'Product'
-    
+        return f'ProductInterface'
+
+    def id(self):
+        return NotImplementedError
+
+    def name(self) -> str:
+        pass
+
+    def status(self) -> str:
+        pass
+
+    def price(self) -> str:
+        pass
+
     def is_valid(self) -> bool:
         pass
 
-    def enable(self) -> bool:
+    def enabled(self) -> bool:
         pass
 
-    def disable(self) -> bool:
+    def disabled(self) -> bool:
         pass
 
-    def get_id(self) -> str:
+
+class Product(ProductInterface):
+    __slots__ = ['__id', '__name', '__status', '__price']
+
+    DISABLED = "disabled"
+    ENABLED = "enable"
+
+    def __init__(self, id, name, status, price):
+       self.__id = id
+       self.__name = name
+       self.__status = status
+       self.__price = price
+
+    def __str__(self) -> str:
+        return f'Product'
+
+    def id(self):
+        return self.__id
+
+    def name(self):
+        return self.__name
+
+    def status(self):
+        return self.__name
+
+    def price(self):
+        return self.__price
+
+    def is_valid(self) -> bool:
         pass
 
-    def get_name(self) -> str:
-        pass
+    def enabled(self) -> bool:
+        if self.__price > 0:
+            self.__status = self.ENABLED
+            return True
+        raise ValueError("The price must be greater than zero to enable the product")
 
-    def get_status(self) -> str:
-        pass
-
-    def get_price(self) -> str:
+    def disabled(self) -> bool:
         pass
 
 
