@@ -1,3 +1,4 @@
+import uuid
 
 class ProductMeta(type):
     def __instancecheck__(cls, instance):
@@ -21,7 +22,7 @@ class ProductInterface(metaclass=ProductMeta):
         return f'ProductInterface'
 
     def id(self):
-        return NotImplementedError
+        pass
 
     def name(self) -> str:
         pass
@@ -41,15 +42,14 @@ class ProductInterface(metaclass=ProductMeta):
     def disabled(self) -> bool:
         pass
 
+DISABLED = "disabled"
+ENABLED = "enable"
 
 class Product(ProductInterface):
     __slots__ = ['__id', '__name', '__status', '__price']
 
-    DISABLED = "disabled"
-    ENABLED = "enable"
-
-    def __init__(self, id, name, status, price):
-       self.__id = id
+    def __init__(self, name, status, price):
+       self.__id = uuid.uuid1()
        self.__name = name
        self.__status = status
        self.__price = price
@@ -74,7 +74,7 @@ class Product(ProductInterface):
 
     def enabled(self) -> bool:
         if self.__price > 0:
-            self.__status = self.ENABLED
+            self.__status = ENABLED
             return True
         raise ValueError("The price must be greater than zero to enable the product")
 
