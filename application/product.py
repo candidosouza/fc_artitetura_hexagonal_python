@@ -64,7 +64,7 @@ class Product(ProductInterface):
         return self.__name
 
     def status(self):
-        return self.__name
+        return self.__status
 
     def price(self):
         return self.__price
