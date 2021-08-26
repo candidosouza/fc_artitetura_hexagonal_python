@@ -7,7 +7,7 @@ class TestProduct(unittest.TestCase):
     def test_product_enable(self):
         product = Product(name="Hello", status=DISABLED, price=10)
         enable = product.enabled()
-        self.assertEqual(enable, True)
+        self.assertEqual(enable, None)
         self.assertEqual(product.status(), ENABLED)
 
         product = Product(name="Hello", status=DISABLED, price=0)

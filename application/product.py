@@ -72,10 +72,10 @@ class Product(ProductInterface):
     def is_valid(self) -> bool:
         pass
 
-    def enabled(self) -> bool:
+    def enabled(self) -> None:
         if self.__price > 0:
             self.__status = ENABLED
-            return True
+            return None
         raise ValueError("The price must be greater than zero to enable the product")
 
     def disabled(self) -> bool:
