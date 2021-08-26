@@ -57,15 +57,19 @@ class Product(ProductInterface):
     def __str__(self) -> str:
         return f'Product'
 
+    @property
     def id(self):
         return self.__id
 
+    @property
     def name(self):
         return self.__name
 
+    @property
     def status(self):
         return self.__status
 
+    @property
     def price(self):
         return self.__price
 
@@ -78,8 +82,15 @@ class Product(ProductInterface):
             return None
         raise ValueError("The price must be greater than zero to enable the product")
 
-    def disabled(self) -> bool:
-        pass
+    def disabled(self) -> None:
+        if self.__price == 0:
+            self.__status = DISABLED
+            return None
+        raise ValueError("The price must be zero in order to have the product disabled")
+
+    @price.setter
+    def price(self, value):
+        self._price = value
 
 
 print(issubclass(Product, ProductInterface))
