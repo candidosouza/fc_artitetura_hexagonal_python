@@ -1,4 +1,5 @@
 import uuid
+from validator import validate, validate_many
 
 class ProductMeta(type):
     def __instancecheck__(cls, instance):
@@ -36,10 +37,10 @@ class ProductInterface(metaclass=ProductMeta):
     def is_valid(self) -> bool:
         pass
 
-    def enabled(self) -> bool:
+    def enabled(self) -> None:
         pass
 
-    def disabled(self) -> bool:
+    def disabled(self) -> None:
         pass
 
 DISABLED = "disabled"
@@ -48,8 +49,15 @@ ENABLED = "enable"
 class Product(ProductInterface):
     __slots__ = ['__id', '__name', '__status', '__price']
 
+    rules = {
+        "__id": "required|uuidv4",
+        "__name": "required|min:3",
+        "__status": "required|min:6|max:9",
+        "__price": "required|float"
+    }
+
     def __init__(self, name, status, price):
-       self.__id = uuid.uuid1()
+       self.__id = uuid.uuid4()
        self.__name = name
        self.__status = status
        self.__price = price
@@ -74,7 +82,21 @@ class Product(ProductInterface):
         return self.__price
 
     def is_valid(self) -> bool:
-        pass
+        if self.status == 0:
+            self.__status = DISABLED
+
+        if self.status != ENABLED and self.status != DISABLED:
+            raise ValueError("The status must be enable or disabled")
+
+        if self.price < 0:
+            raise ValueError("The price must be greater or equal zero")
+
+        result, validated_data, errors = validate(Product, self.rules, return_info=True)
+
+        if not result:
+            return errors
+
+        return True
 
     def enabled(self) -> None:
         if self.__price > 0:
@@ -87,10 +109,6 @@ class Product(ProductInterface):
             self.__status = DISABLED
             return None
         raise ValueError("The price must be zero in order to have the product disabled")
-
-    @price.setter
-    def price(self, value):
-        self._price = value
 
 
 print(issubclass(Product, ProductInterface))
