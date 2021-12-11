@@ -34,3 +34,31 @@ class TestProduct(unittest.TestCase):
             str(e.exception)
         )
 
+    def test_product_is_valid(self):
+        product = Product(name="Hello", status=DISABLED, price=10)
+        is_valid = product.is_valid()
+
+        self.assertEqual(is_valid, True)
+
+        product = Product(name="Hello", status="INVALID", price=0)
+        with self.assertRaises(ValueError) as e:
+            product.is_valid()
+
+        self.assertEqual(
+            "The status must be enable or disabled",
+            str(e.exception)
+        )
+
+        product = Product(name="Hello", status=ENABLED, price=10)
+        is_valid = product.is_valid()
+        self.assertEqual(is_valid, True)
+
+        product = Product(name="Hello", status=ENABLED, price=-10)
+        with self.assertRaises(ValueError) as e:
+            product.is_valid()
+
+        self.assertEqual(
+            "The price must be greater or equal zero",
+            str(e.exception)
+        )
+
