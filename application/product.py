@@ -98,8 +98,7 @@ class Product(ProductInterface):
             raise ValueError("The status must be enable or disabled")
         if self.price < 0:
             raise ValueError("The price must be greater or equal zero")
-        result, validated_data, errors = validate(
-            self.data(), self.rules, return_info=True)
+        result, validated_data, errors = validate(self.data(), self.rules, return_info=True)
         if not result:
             return errors
         return True
