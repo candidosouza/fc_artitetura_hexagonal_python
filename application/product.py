@@ -84,21 +84,19 @@ class Product(ProductInterface):
     def price(self):
         return self.__price
 
-    def data(self):
-        return {
+    def is_valid(self) -> bool:
+        data = {
             "__name": self.name,
             "__status": self.status,
             "__price": self.price
         }
-
-    def is_valid(self) -> bool:
         if self.status == 0:
             self.__status = DISABLED
         if self.status not in [ENABLED, DISABLED]:
             raise ValueError("The status must be enable or disabled")
         if self.price < 0:
             raise ValueError("The price must be greater or equal zero")
-        result, validated_data, errors = validate(self.data(), self.rules, return_info=True)
+        result, validated_data, errors = validate(data, self.rules, return_info=True)
         if not result:
             return errors
         return True
